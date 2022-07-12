@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = "mongodb+srv://notesTraker:SZW3P9PLhG2kwC1G@cluster0.4ekkx.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -51,9 +51,22 @@ async function run() {
         })
 
         // update notestaker
-        app.put('//note/:id', (req, res) =>{
+        app.put('/note/:id', async(req, res) =>{
             const id = req.params.id;
-            console.log(id);
+            const data = req.body;
+            console.log("From update api", data)
+            const filter = {_id: ObjectId(id)};
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                  userName:data.userName,
+                  textData:data.textData,
+                
+                },
+              };
+
+              const result = await notesCollection.updateOne(filter, updateDoc, options);
+              res.send(result);
         })
 
 
