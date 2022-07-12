@@ -50,7 +50,8 @@ async function run() {
 
         })
 
-        // update notestaker
+        // update notestaker+
+        //localhost:5000/note/62cd67b67b6b763c9b6e725d
         app.put('/note/:id', async(req, res) =>{
             const id = req.params.id;
             const data = req.body;
@@ -71,6 +72,13 @@ async function run() {
 
 
         //delete notes taker
+        //localhost:5000/note/62cd67b67b6b763c9b6e725d
+        app.delete('/note/:id', async(req,res)=>{
+            const id = req.params.id;
+            const filter = {_id: ObjectId(id)};
+            const result = await notesCollection.deleteOne(filter);
+            req.send(result);
+        });
         console.log("Connected to the Db");
     }
     finally {
